@@ -23,7 +23,6 @@
 /* Begin PBXBuildFile section */
 		835318581D52293F005738CD /* RNBackgroundFetch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 835318571D52293F005738CD /* RNBackgroundFetch.h */; };
 		8353185A1D52293F005738CD /* RNBackgroundFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = 835318591D52293F005738CD /* RNBackgroundFetch.m */; };
-		835318681D522B22005738CD /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 835318671D522B22005738CD /* TSBackgroundFetch.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,8 +42,6 @@
 		835318541D52293F005738CD /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNBackgroundFetch.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		835318571D52293F005738CD /* RNBackgroundFetch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNBackgroundFetch.h; sourceTree = "<group>"; };
 		835318591D52293F005738CD /* RNBackgroundFetch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNBackgroundFetch.m; sourceTree = "<group>"; };
-		835318601D522994005738CD /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
-		835318671D522B22005738CD /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TSBackgroundFetch.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +49,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				835318681D522B22005738CD /* TSBackgroundFetch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +58,6 @@
 		8353184B1D52293F005738CD = {
 			isa = PBXGroup;
 			children = (
-				835318671D522B22005738CD /* TSBackgroundFetch.framework */,
 				835318561D52293F005738CD /* RNBackgroundFetch */,
 				835318551D52293F005738CD /* Products */,
 			);
@@ -81,7 +76,6 @@
 			children = (
 				835318571D52293F005738CD /* RNBackgroundFetch.h */,
 				835318591D52293F005738CD /* RNBackgroundFetch.m */,
-				835318601D522994005738CD /* RNBackgroundFetch+AppDelegate.m */,
 			);
 			path = RNBackgroundFetch;
 			sourceTree = "<group>";
@@ -324,6 +318,7 @@
 				8353185F1D52293F005738CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		835318631D522A8F005738CD /* Build configuration list for PBXAggregateTarget "Build" */ = {
 			isa = XCConfigurationList;
@@ -332,6 +327,7 @@
 				835318651D522A8F005738CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

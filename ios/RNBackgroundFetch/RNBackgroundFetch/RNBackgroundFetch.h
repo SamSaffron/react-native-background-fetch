@@ -7,11 +7,10 @@
 //
 
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import "RCTBridgeModule.h"
-#import "RCTLog.h"
+#import "RCTEventEmitter.h"
 
-@interface RNBackgroundFetch : NSObject <RCTBridgeModule, UIApplicationDelegate>
+@interface RNBackgroundFetch : RCTEventEmitter
+
++ (void)gotBackgroundFetch:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 @end

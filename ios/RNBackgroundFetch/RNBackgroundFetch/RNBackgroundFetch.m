@@ -7,88 +7,87 @@
 //
 
 #import "RNBackgroundFetch.h"
-#import <TSBackgroundFetch/TSBackgroundFetch.h>
 #import <UIKit/UIKit.h>
 
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
+#import "RCTUtils.h"
+#import "RCTLog.h"
 
-static NSString *const RN_BACKGROUND_FETCH_TAG = @"RNBackgroundFetch";
+NSString *const RNBackgroundFetchGotNotification = @"RNBackgroundFetchGotNotification";
+
 
 @implementation RNBackgroundFetch {
-    BOOL configured;
+    void (^_done) (BOOL);
 }
 
-@synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
 
--(instancetype)init
+- (void)startObserving
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleBackgroundFetch:)
+                                                 name:RNBackgroundFetchGotNotification
+                                               object:nil];
+
+}
+
+- (void)stopObserving
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"backgroundFetch"];
+}
+
+-(id)init {
     self = [super init];
-    
-    configured = NO;
-    
+    if (self) {
+        self->_done = nil;
+    }
     return self;
 }
-RCT_EXPORT_METHOD(configure:(NSDictionary*)config failure:(RCTResponseSenderBlock)failure)
+
++ (void)gotBackgroundFetch:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+ 
+    NSDictionary *payload = @{@"callback": completionHandler};
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:RNBackgroundFetchGotNotification
+                                                        object:self
+                                                        userInfo: payload];
+
+}
+
+RCT_EXPORT_METHOD(done:(BOOL)gotData)
 {
-    if (configured) {
-        RCTLogInfo(@"- %@ already configured", RN_BACKGROUND_FETCH_TAG);
-    }
-    RCTLogInfo(@"- %@ configure", RN_BACKGROUND_FETCH_TAG);
-    
-    TSBackgroundFetch *fetchManager = [TSBackgroundFetch sharedInstance];
-    [fetchManager configure:config];
-    
-    if ([fetchManager start]) {
-        configured = YES;
-        void (^handler)();
-        handler = ^void(void){
-            RCTLogInfo(@"- %@ Rx Fetch Event", RN_BACKGROUND_FETCH_TAG);
-            [_bridge.eventDispatcher sendDeviceEventWithName:[self eventName:@"fetch"] body:nil];
-        };
-        [fetchManager addListener:RN_BACKGROUND_FETCH_TAG callback:handler];
-    } else {
-        RCTLogInfo(@"- %@ failed to start", RN_BACKGROUND_FETCH_TAG);
-        failure(@[@"Failed to start background fetch API"]);
+    if (self->_done) {
+        self->_done(gotData);
+        self->_done = nil;
     }
 }
 
-RCT_EXPORT_METHOD(start:(RCTResponseSenderBlock)success failure:(RCTResponseSenderBlock)failure)
-{
-    RCTLogInfo(@"- %@ start", RN_BACKGROUND_FETCH_TAG);
-    TSBackgroundFetch *fetchManager = [TSBackgroundFetch sharedInstance];
-    if ([fetchManager start]) {
-        success(@[]);
-    } else {
-        RCTLogInfo(@"- %@ failed to start", RN_BACKGROUND_FETCH_TAG);
-        failure(@[@"Failed to start background fetch API"]);
-    }
-}
+- (void)handleBackgroundFetch:(NSNotification *)notification {
 
-RCT_EXPORT_METHOD(stop)
-{
-    RCTLogInfo(@"- RNBackgroundFetch stop");
-    TSBackgroundFetch *fetchManager = [TSBackgroundFetch sharedInstance];
-    [fetchManager stop];
-}
+    void (^completionHandler) (UIBackgroundFetchResult);
 
-RCT_EXPORT_METHOD(finish)
-{
-    RCTLogInfo(@"- RNBackgroundFetch finish");
-    TSBackgroundFetch *fetchManager = [TSBackgroundFetch sharedInstance];
-    [fetchManager finish:RN_BACKGROUND_FETCH_TAG result:UIBackgroundFetchResultNewData];
-}
 
--(NSString*) eventName:(NSString*)name
-{
-    return [NSString stringWithFormat:@"%@:%@", RN_BACKGROUND_FETCH_TAG, name];
-}
-
-- (void)dealloc
-{
+    completionHandler = [[notification userInfo] objectForKey:@"callback"];
     
+    self->_done = ^(BOOL hasData){
+        RCTLogInfo(@"Completing background fetch");
+        if (hasData) {
+            completionHandler(UIBackgroundFetchResultNewData);
+        } else {
+            completionHandler(UIBackgroundFetchResultNoData);
+        }
+    };
+    
+    
+    [self sendEventWithName:@"backgroundFetch" body:nil];
 }
 
 @end
