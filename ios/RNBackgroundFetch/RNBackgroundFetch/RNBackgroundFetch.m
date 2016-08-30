@@ -87,7 +87,6 @@ RCT_EXPORT_METHOD(done:(BOOL)gotData)
     completionHandler = [[notification userInfo] objectForKey:@"callback"];
     
     self->_done = ^(BOOL hasData){
-        RCTLogInfo(@"Completing background fetch");
         if (hasData) {
             completionHandler(UIBackgroundFetchResultNewData);
         } else {
@@ -97,9 +96,8 @@ RCT_EXPORT_METHOD(done:(BOOL)gotData)
     
     
     self->count++;
-    completionHandler(UIBackgroundFetchResultNewData);
     
-    //[self sendEventWithName:@"backgroundFetch" body:nil];
+    [self sendEventWithName:@"backgroundFetch" body:nil];
 }
 
 @end
