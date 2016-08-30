@@ -14,6 +14,10 @@ class Api extends NativeEventEmitter {
   done(result) {
     RNBackgroundFetch.done(result)
   }
+
+  getCount(callback) {
+    RNBackgroundFetch.getCount(callback)
+  }
 }
 
 module.exports = new Api()

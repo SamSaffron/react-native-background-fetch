@@ -19,6 +19,7 @@ NSString *const RNBackgroundFetchGotNotification = @"RNBackgroundFetchGotNotific
 
 @implementation RNBackgroundFetch {
     void (^_done) (BOOL);
+    int count;
 }
 
 
@@ -47,6 +48,7 @@ RCT_EXPORT_MODULE();
     self = [super init];
     if (self) {
         self->_done = nil;
+        self->count = 0;
     }
     return self;
 }
@@ -61,6 +63,13 @@ RCT_EXPORT_MODULE();
                                                         userInfo: payload];
 
 }
+
+
+RCT_EXPORT_METHOD(getCount:(RCTResponseSenderBlock)callback)
+{
+    callback(@[[NSNumber numberWithInt: self->count]]);
+}
+
 
 RCT_EXPORT_METHOD(done:(BOOL)gotData)
 {
@@ -87,7 +96,10 @@ RCT_EXPORT_METHOD(done:(BOOL)gotData)
     };
     
     
-    [self sendEventWithName:@"backgroundFetch" body:nil];
+    self->count++;
+    completionHandler(UIBackgroundFetchResultNewData);
+    
+    //[self sendEventWithName:@"backgroundFetch" body:nil];
 }
 
 @end
